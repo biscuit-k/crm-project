@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--
+        MyBatis 核心配置文件配置标签定义顺序
+        properties?, settings?, typeAliases?, typeHandlers?,
+        objectFactory?, objectWrapperFactory?, reflectorFactory?,
+        plugins?, environments?, databaseIdProvider?, mappers
+     -->
+
+    <!-- 导入数据源配置配置 -->
+    <properties resource="jdbc.properties"/>
+
+    <settings>
+        <!-- 日志 -->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <!-- 开启 mysql 下划线命名法 于 Java 驼峰命名法，字段和属性的自动映射 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!-- 配置实体类别名 -->
+    <typeAliases>
+        <!-- 扫描实体类所在包的方式全部添加默认别名 -->
+        <package name="com.biscuit.crm.entity"/>
+    </typeAliases>
+
+    <!-- 配置插件插件 -->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <property name="dialect" value="mysql"/>
+        </plugin>
+    </plugins>
+
+
+    <!-- 配置数据源环境 -->
+    <!--
+    <environments default="defaultEnvironment">
+        <environment id="defaultEnvironment">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    -->
+
+    <!-- 配置映射器 -->
+    <mappers>
+        <!-- 扫描映射文件所在包，全部将其引入 -->
+        <package name="com.biscuit.crm.settings.mapper"/>
+        <package name="com.biscuit.crm.workbench.mapper"/>
+    </mappers>
+
+</configuration>
