@@ -380,6 +380,7 @@ public class ClueController {
                 returnObject.setReturnData(activityList);
             }else{
                 returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                System.out.println("OK");
             }
         }else{
             returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
