@@ -376,8 +376,6 @@ public class ClueController {
         if(StringUtils.strNotNull(clueId)){
             List<Activity> activityList = activityService.queryClueBindActivityByClueIdAndLikeActivityName(clueId, activityName);
             if(activityList != null && activityList.size() > 0){
-                System.out.println("测试 Git 修改1");
-                System.out.println("测试 Git 修改2");
                 returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
                 returnObject.setReturnData(activityList);
             }else{
