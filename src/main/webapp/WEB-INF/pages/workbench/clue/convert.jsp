@@ -65,10 +65,24 @@
 			// 确认进行转换
 			$("#saveCreateConvertBtn").click(function (){
 				// 判断是否创建交易
-				if($("#isCreateTransaction").prop("checked")){
-					alert("创建交易");
-				}
-				alert("线索转换");
+				var isCreateTransaction =  $("#isCreateTransaction").prop("checked");
+				var clueId = $("#clueId").val();
+				$.ajax({
+					url : 'workbench/clue/saveConvert.do',
+					dataType: 'json',
+					type: 'post',
+					data : {
+						clueId : clueId
+					},
+					success: function (data){
+						if (data.code == 1){
+							alert("转换成功！");
+							window.location.href = "workbench/clue/index.do";
+						}else{
+							alert(data.message);
+						}
+					}
+				})
 			});
 
 			// 取消线索转换

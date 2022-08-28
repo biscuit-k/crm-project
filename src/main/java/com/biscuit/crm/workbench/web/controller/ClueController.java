@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class ClueController {
@@ -380,10 +378,30 @@ public class ClueController {
                 returnObject.setReturnData(activityList);
             }else{
                 returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
-                System.out.println("OK");
             }
         }else{
             returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+        }
+
+        return returnObject;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/workbench/clue/saveConvert.do")
+    public Object saveConvert(HttpSession session , String clueId){
+        Map<String , Object> map = new HashMap<>();
+        map.put(Contants.SESSION_USER , session.getAttribute(Contants.SESSION_USER));
+        map.put("clueId" , clueId);
+
+        ReturnObject returnObject = new ReturnObject();
+        try {
+            clueService.saveConvert(map);
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+        } catch (Exception e){
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage(Contants.RETURN_OBJECT_ERROR_MESSAGE_CURRENCY);
+            e.printStackTrace();
         }
 
         return returnObject;

@@ -378,6 +378,7 @@
            left join tbl_dic_value d2 on d2.id = c.source
            left join tbl_user u2 on u2.id = c.create_by
            left join tbl_user u3 on u3.id = c.edit_by
+    where c.id = #{id}
   </select>
 
   <!-- int updateClue(@Param("clue") Clue clue); -->
@@ -403,4 +404,10 @@
     where id = #{clue.id,jdbcType=CHAR}
   </update>
 
+  <!-- Clue selectClueById(@Param("id") String id); -->
+  <select id="selectClueById" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from tbl_clue c
+    where `id` = #{id}
+  </select>
 </mapper>

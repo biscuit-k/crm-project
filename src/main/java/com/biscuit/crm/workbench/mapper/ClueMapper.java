@@ -97,6 +97,14 @@ public interface ClueMapper {
     int updateClue(@Param("clue") Clue clue);
 
 
+    /**
+     * 根据 Id 查询线索信息，用于转换到客户信息使用
+     * @param id
+     * @return
+     */
+    Clue selectClueById(@Param("id") String id);
+
+
 
 
 }
