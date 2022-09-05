@@ -367,6 +367,14 @@
     </where>
   </select>
 
+  <!-- List<Activity> selectClueBindActivityByClueId(@Param("clueId") String clueId); -->
+  <select id="selectClueBindActivityByClueId" resultMap="BaseResultMap">
+    select a.id, owner, name, start_date, end_date, cost, description, create_time, create_by,
+           edit_time, edit_by
+    from tbl_activity a
+    inner join tbl_clue_activity_relation car on a.id = car.activity_id
+    where car.clue_id = #{clueId}
+  </select>
 
 
 </mapper>

@@ -410,4 +410,12 @@
     from tbl_clue c
     where `id` = #{id}
   </select>
+
+
+  <!-- int deleteSingleClueById(@Param("id") String id); -->
+  <delete id="deleteSingleClueById">
+    delete from tbl_clue where id = #{id}
+  </delete>
+
+
 </mapper>

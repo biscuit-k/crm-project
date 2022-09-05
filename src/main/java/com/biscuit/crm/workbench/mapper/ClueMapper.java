@@ -105,6 +105,14 @@ public interface ClueMapper {
     Clue selectClueById(@Param("id") String id);
 
 
+    /**
+     * 根据线索id，删除一条线索信息
+     * @param id
+     * @return
+     */
+    int deleteSingleClueById(@Param("id") String id);
+
+
 
 
 }

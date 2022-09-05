@@ -14,6 +14,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -389,10 +390,12 @@ public class ClueController {
 
     @ResponseBody
     @RequestMapping("/workbench/clue/saveConvert.do")
-    public Object saveConvert(HttpSession session , String clueId){
+    public Object saveConvert(HttpSession session , String clueId ,Tran tran , boolean isCreateTransaction){
         Map<String , Object> map = new HashMap<>();
         map.put(Contants.SESSION_USER , session.getAttribute(Contants.SESSION_USER));
         map.put("clueId" , clueId);
+        map.put("isCreateTransaction" , isCreateTransaction);
+        map.put("tran" , tran);
 
         ReturnObject returnObject = new ReturnObject();
         try {

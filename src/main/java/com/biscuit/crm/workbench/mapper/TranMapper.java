@@ -1,6 +1,7 @@
 package com.biscuit.crm.workbench.mapper;
 
 import com.biscuit.crm.workbench.entity.Tran;
+import org.apache.ibatis.annotations.Param;
 
 public interface TranMapper {
     /**
@@ -50,4 +51,12 @@ public interface TranMapper {
      * @mbggenerated Mon Sep 05 16:14:40 CST 2022
      */
     int updateByPrimaryKey(Tran record);
+
+
+    /**
+     * 新增一条交易信息
+     * @param tran
+     * @return
+     */
+    int insertTran(@Param("tran") Tran tran);
 }

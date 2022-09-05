@@ -122,4 +122,10 @@
     delete from tbl_clue_activity_relation where activity_id = #{activityId} and clue_id = #{clueId}
   </delete>
 
+
+  <!-- int deleteManyClueActivityRelationByClueId(@Param("clueId") String clueId); -->
+  <delete id="deleteManyClueActivityRelationByClueId">
+    delete from tbl_clue_activity_relation where clue_id = #{clueId}
+  </delete>
+
 </mapper>

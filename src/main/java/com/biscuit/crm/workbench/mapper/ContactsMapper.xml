@@ -276,7 +276,11 @@
 
   <!-- int insertContacts(@Param("contacts") Contacts contacts); -->
   <insert id="insertContacts">
-    insert into tbl_contacts()
-    values ()
+    insert into tbl_contacts(id, owner, source, customer_id, fullname, appellation, email, mphone, job, create_by,
+                             create_time, description, contact_summary, next_contact_time, address)
+    values (#{contacts.id}, #{contacts.owner}, #{contacts.source}, #{contacts.customerId}, #{contacts.fullname},
+            #{contacts.appellation}, #{contacts.email}, #{contacts.mphone}, #{contacts.job}, #{contacts.createBy},
+            #{contacts.createTime}, #{contacts.description}, #{contacts.contactSummary}, #{contacts.nextContactTime},
+            #{contacts.address})
   </insert>
 </mapper>

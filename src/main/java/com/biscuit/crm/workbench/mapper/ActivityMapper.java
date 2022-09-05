@@ -137,5 +137,13 @@ public interface ActivityMapper {
     (@Param("clueId") String clueId , @Param("activityName") String activityName);
 
 
+    /**
+     * 根据线索id，查询该线索绑定的市场活动信息
+     * @param clueId
+     * @return
+     */
+    List<Activity> selectClueBindActivityByClueId(@Param("clueId") String clueId);
+
+
 
 }

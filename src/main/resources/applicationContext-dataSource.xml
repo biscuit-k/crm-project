@@ -41,8 +41,10 @@
 
     <!-- 配置事务 -->
     <aop:config>
-        <aop:pointcut expression="execution(* com.biscuit.crm.settings.service.*.*(..))" id="allMethodPointcut"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="allMethodPointcut"/>
+        <aop:pointcut expression="execution(* com.biscuit.crm.settings.service.*.*(..))" id="allMethodPointcut1"/>
+        <aop:pointcut expression="execution(* com.biscuit.crm.workbench.service.*.*(..))" id="allMethodPointcut2"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="allMethodPointcut1"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="allMethodPointcut2"/>
     </aop:config>
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>

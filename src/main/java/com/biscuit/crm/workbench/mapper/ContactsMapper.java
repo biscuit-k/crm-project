@@ -53,6 +53,11 @@ public interface ContactsMapper {
     int updateByPrimaryKey(Contacts record);
 
 
+    /**
+     * 保存一条联系人信息
+     * @param contacts
+     * @return
+     */
     int insertContacts(@Param("contacts") Contacts contacts);
 
 }

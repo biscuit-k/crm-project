@@ -283,4 +283,17 @@
       next_contact_time = #{nextContactTime,jdbcType=CHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+
+
+  <!-- int insertTran(@Param("tran") Tran tran); -->
+  <insert id="insertTran">
+    insert into tbl_tran
+        (id, owner, money, name, expected_date, customer_id, stage, type, source, activity_id, contacts_id,
+         create_by, create_time, description, contact_summary, next_contact_time)
+    values
+      (#{tran.id}, #{tran.owner}, #{tran.money}, #{tran.name}, #{tran.expectedDate}, #{tran.customerId}, #{tran.stage}, #{tran.type},
+       #{tran.source}, #{tran.activityId}, #{tran.contactsId}, #{tran.createBy}, #{tran.createTime}, #{tran.description},
+       #{tran.contactSummary}, #{tran.nextContactTime})
+  </insert>
+
 </mapper>

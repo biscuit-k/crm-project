@@ -76,4 +76,18 @@ public interface ClueRemarkMapper {
      */
     int insertClueRemark(@Param("clueRemark") ClueRemark clueRemark);
 
+    /**
+     * 根据线索 id 查询该线索的所有备注信息
+     * @param clueId
+     * @return
+     */
+    List<ClueRemark> selectClueRemarkByClueId(@Param("clueId") String clueId);
+
+    /**
+     * 根据线索 id ，删除该线索所有备注信息
+     * @param clueId
+     * @return
+     */
+    int deleteManyClueRemarkByClueId(@Param("clueId") String clueId);
+
 }

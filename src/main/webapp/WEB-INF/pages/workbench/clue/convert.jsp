@@ -67,12 +67,24 @@
 				// 判断是否创建交易
 				var isCreateTransaction =  $("#isCreateTransaction").prop("checked");
 				var clueId = $("#clueId").val();
+				var money = $.trim($("#amountOfMoney").val());
+				var name = $.trim($("#tradeName").val());
+				var expectedDate = $("#expectedClosingDate").val();
+				var stage = $("#stage").val();
+				var activityId = $("#activityId").val();
+
 				$.ajax({
 					url : 'workbench/clue/saveConvert.do',
 					dataType: 'json',
 					type: 'post',
 					data : {
-						clueId : clueId
+						clueId : clueId,
+						isCreateTransaction : isCreateTransaction,
+						money : money,
+						name : name,
+						expectedDate : expectedDate,
+						stage : stage,
+						activityId : activityId
 					},
 					success: function (data){
 						if (data.code == 1){
