@@ -28,6 +28,5 @@ public class ClueRemarkServiceImpl implements ClueRemarkService {
     @Override
     public int saveDeleteClueRemarkById(String id) {
         return clueRemarkMapper.deleteClueRemarkById(id);
-
     }
 }

@@ -283,4 +283,14 @@
             #{contacts.createTime}, #{contacts.description}, #{contacts.contactSummary}, #{contacts.nextContactTime},
             #{contacts.address})
   </insert>
+
+
+  <!-- List<Contacts> selectAllContacts(); -->
+  <select id="selectAllContacts" resultMap="BaseResultMap">
+    select (id, owner, source, customer_id, fullname, appellation, email, mphone, job, create_by,
+            create_time, edit_by, edit_time, description, contact_summary, next_contact_time,
+            address)
+    from tbl_contacts con
+  </select>
+
 </mapper>
