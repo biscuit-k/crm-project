@@ -16,6 +16,6 @@ public class ContactsServiceImpl implements ContactsService {
 
     @Override
     public List<Contacts> queryAllContacts() {
-        return null;
+        return contactsMapper.selectAllContacts();
     }
 }

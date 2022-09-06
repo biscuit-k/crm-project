@@ -235,5 +235,11 @@
            #{customer.address})
   </insert>
 
+  <!-- List<Customer> selectAllCustomer(); -->
+  <select id="selectAllCustomer" resultMap="BaseResultMap">
+    select cus.id,u1.name owner , cus.name , phone , website
+    from tbl_customer cus
+    inner join tbl_user u1 on u1.id = cus.owner
+  </select>
 
 </mapper>

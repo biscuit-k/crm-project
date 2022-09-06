@@ -223,7 +223,7 @@
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="tradeName">交易名称</label>
-		    <input type="text" class="form-control" id="tradeName" value="${requestScope.clue.company}-">
+		    <input type="text" class="form-control" id="tradeName">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="expectedClosingDate">预计成交日期</label>

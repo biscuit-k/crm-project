@@ -197,11 +197,7 @@ public class ClueServiceImpl implements ClueService {
             tran.setCreateTime(DateUtils.formateDateTime(new Date()));
             tran.setContactsId(contacts.getId());
             tran.setCustomerId(customer.getId());
-            tran.setDescription(clue.getDescription());
-            tran.setContactSummary(clue.getContactSummary());
             tran.setOwner(user.getId());
-            tran.setNextContactTime(clue.getNextContactTime());
-            tran.setSource(clue.getSource());
 
             tranMapper.insertTran(tran);
 
@@ -234,9 +230,6 @@ public class ClueServiceImpl implements ClueService {
 
         // 13. 删除该线索
         clueMapper.deleteSingleClueById(clueId);
-
-        int a = 1 / 0;
-
 
     }
 }

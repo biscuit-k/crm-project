@@ -27,6 +27,11 @@
 				e.stopPropagation();
 			});
 
+			// 点击客户名称查看详情信息
+			$("#tBody").on("click" , ".customerForDetail" , function(){
+				alert($(this).attr("id"));
+			})
+
 		});
 
 	</script>
@@ -268,7 +273,16 @@
 							<td>公司网站</td>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="tBody">
+					<c:forEach items="${requestScope.customerList}" var="customer">
+						<tr>
+							<td><input type="checkbox" /></td>
+							<td><a style="text-decoration: none; cursor: pointer;" class="customerForDetail" id="${customer.id}">${customer.name}</a></td>
+							<td>${customer.owner}</td>
+							<td>${customer.phone}</td>
+							<td>${customer.website}</td>
+						</tr>
+					</c:forEach>
 						<tr>
 							<td><input type="checkbox" /></td>
 							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">动力节点</a></td>

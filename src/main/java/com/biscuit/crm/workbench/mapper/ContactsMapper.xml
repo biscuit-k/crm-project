@@ -287,10 +287,12 @@
 
   <!-- List<Contacts> selectAllContacts(); -->
   <select id="selectAllContacts" resultMap="BaseResultMap">
-    select (id, owner, source, customer_id, fullname, appellation, email, mphone, job, create_by,
-            create_time, edit_by, edit_time, description, contact_summary, next_contact_time,
-            address)
+    select con.id, u1.name owner, cus.name customer_id , fullname, d1.value appellation , d2.value source
     from tbl_contacts con
+    inner join tbl_user u1 on con.owner = u1.id
+    inner join tbl_dic_value d1 on d1.id = con.appellation
+    inner join tbl_dic_value d2 on d2.id = con.source
+    inner join tbl_customer cus on cus.id = con.customer_id
   </select>
 
 </mapper>
