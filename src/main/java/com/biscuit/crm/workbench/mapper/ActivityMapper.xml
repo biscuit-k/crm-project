@@ -377,4 +377,24 @@
   </select>
 
 
+  <!-- List<Activity> selectActivityForTranSave(); -->
+  <select id="selectActivityForTranSave" resultMap="BaseResultMap">
+    select a.id , a.name , a.start_date , a.end_date , u.name owner
+    from tbl_activity a
+    inner join tbl_user u on u.id = a.owner
+  </select>
+
+
+  <!-- List<Activity> selectActivityForTranSaveLikeName(@Param("name") String name); -->
+  <select id="selectActivityForTranSaveLikeName" resultMap="BaseResultMap">
+    select a.id , a.name , a.start_date , a.end_date , u.name owner
+    from tbl_activity a
+    inner join tbl_user u on u.id = a.owner
+    <where>
+      <if test="name!=null and name!=''">
+        a.name like '%${name}%'
+      </if>
+    </where>
+  </select>
+
 </mapper>

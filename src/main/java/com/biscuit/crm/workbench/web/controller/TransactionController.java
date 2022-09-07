@@ -1,10 +1,14 @@
 package com.biscuit.crm.workbench.web.controller;
 
+import com.biscuit.crm.commons.contants.Contants;
+import com.biscuit.crm.commons.entity.ReturnObject;
+import com.biscuit.crm.settings.entity.User;
+import com.biscuit.crm.settings.service.UserService;
+import com.biscuit.crm.workbench.entity.Activity;
+import com.biscuit.crm.workbench.entity.Contacts;
 import com.biscuit.crm.workbench.entity.DicValue;
 import com.biscuit.crm.workbench.entity.Tran;
-import com.biscuit.crm.workbench.service.DicTypeService;
-import com.biscuit.crm.workbench.service.DicValueService;
-import com.biscuit.crm.workbench.service.TransactionService;
+import com.biscuit.crm.workbench.service.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,15 @@ public class TransactionController {
 
     @Autowired
     private TransactionService transactionService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ContactsService contactsService;
+
+    @Autowired
+    private ActivityService activityService;
 
     @RequestMapping("/workbench/transaction/index.do")
     public ModelAndView index(ModelAndView modelAndView){
@@ -78,15 +91,85 @@ public class TransactionController {
 
     @RequestMapping("/workbench/transaction/save.do")
     public ModelAndView save(ModelAndView modelAndView){
+
+        List<User> ownerList = userService.queryAllUsers();
+        modelAndView.addObject("ownerList" , ownerList);
+
+        String typeCodeStage = dicTypeService.queryTypeCodeByName("阶段");
+        List<DicValue> dicValueStage = dicValueService.queryDicValueByTypeCode(typeCodeStage);
+        modelAndView.addObject("dicValueStage" ,dicValueStage );
+
+        String typeCodeTransactionType = dicTypeService.queryTypeCodeByName("交易类型");
+        List<DicValue> dicValueTransactionType = dicValueService.queryDicValueByTypeCode(typeCodeTransactionType);
+        modelAndView.addObject("dicValueTransactionType" ,dicValueTransactionType );
+
+        String typeCodeSource = dicTypeService.queryTypeCodeByName("来源");
+        List<DicValue> dicValueSource = dicValueService.queryDicValueByTypeCode(typeCodeSource);
+        modelAndView.addObject("dicValueSource" ,dicValueSource );
+
         modelAndView.setViewName("workbench/transaction/save");
         return modelAndView;
     }
+
+    @RequestMapping("/workbench/transaction/queryContactsForTranSave.do")
+    @ResponseBody
+    public Object queryContactsForTranSave(){
+        ReturnObject returnObject = new ReturnObject();
+        List<Contacts> contactsList = contactsService.queryContactsForTranSave();
+        if(contactsList != null && contactsList.size() > 0){
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            returnObject.setReturnData(contactsList);
+        }else{
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage(Contants.RETURN_OBJECT_ERROR_MESSAGE_CURRENCY);
+        }
+        return returnObject;
+    }
+
+
+    @RequestMapping("/workbench/transaction/queryContactsForTranSaveLikeFullName.do")
+    @ResponseBody
+    public Object queryContactsForTranSaveLikeFullName(String fullName){
+
+        List<Contacts> contactsList = contactsService.queryContactsForTranSaveLikeFullName(fullName);
+
+        return contactsList;
+    }
+
+    @RequestMapping("/workbench/transaction/queryActivityForTranSave.do")
+    @ResponseBody
+    public Object queryActivityForTranSave(){
+        ReturnObject returnObject = new ReturnObject();
+
+        List<Activity> activityList = activityService.queryActivityForTranSave();
+        if(activityList != null && activityList.size() > 0){
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            returnObject.setReturnData(activityList);
+        }else{
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage(Contants.RETURN_OBJECT_ERROR_MESSAGE_CURRENCY);
+        }
+
+        return returnObject;
+    }
+
+    @RequestMapping("/workbench/transaction/queryActivityForTranSaveLikeName.do")
+    @ResponseBody
+    public Object queryActivityForTranSaveLikeName(String name){
+
+        List<Activity> activityList = activityService.queryActivityForTranSaveLikeName(name);
+
+
+        return activityList;
+    }
+
 
     @RequestMapping("/workbench/transaction/edit.do")
     public ModelAndView edit(ModelAndView modelAndView , String id){
         modelAndView.setViewName("workbench/transaction/edit");
         return modelAndView;
     }
+
 
 
 }

@@ -145,5 +145,20 @@ public interface ActivityMapper {
     List<Activity> selectClueBindActivityByClueId(@Param("clueId") String clueId);
 
 
+    /**
+     * 查询所有市场活动信息用于与交易信息绑定，来自新建交易信息页面
+     * @return
+     */
+    List<Activity> selectActivityForTranSave();
+
+
+    /**
+     * 根据市场活动名称模糊查询市场活动信息，来自新建交易信息页面
+     * @param name
+     * @return
+     */
+    List<Activity> selectActivityForTranSaveLikeName(@Param("name") String name);
+
+
 
 }

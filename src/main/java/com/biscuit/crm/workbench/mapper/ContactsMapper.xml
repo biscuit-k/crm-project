@@ -295,4 +295,23 @@
     inner join tbl_customer cus on cus.id = con.customer_id
   </select>
 
+
+  <!-- List<Contacts> selectContactsForTranSave(); -->
+  <select id="selectContactsForTranSave" resultMap="BaseResultMap">
+    select id , fullname , email , mphone
+    from tbl_contacts
+  </select>
+
+
+  <!-- List<Contacts> selectContactsForTranSaveLikeFullName(@Param("fullName") String fullName); -->
+  <select id="selectContactsForTranSaveLikeFullName" resultMap="BaseResultMap">
+    select id , fullname , email , mphone
+    from tbl_contacts
+    <where>
+      <if test="fullName!=null and fullName!=''">
+        fullname like '%${fullName}%'
+      </if>
+    </where>
+  </select>
+
 </mapper>

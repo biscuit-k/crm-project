@@ -18,4 +18,14 @@ public class ContactsServiceImpl implements ContactsService {
     public List<Contacts> queryAllContacts() {
         return contactsMapper.selectAllContacts();
     }
+
+    @Override
+    public List<Contacts> queryContactsForTranSave() {
+        return contactsMapper.selectContactsForTranSave();
+    }
+
+    @Override
+    public List<Contacts> queryContactsForTranSaveLikeFullName(String fullName) {
+        return contactsMapper.selectContactsForTranSaveLikeFullName(fullName);
+    }
 }

@@ -8,4 +8,9 @@ public interface ContactsService {
 
     public List<Contacts> queryAllContacts();
 
+
+    public List<Contacts> queryContactsForTranSave();
+
+    public List<Contacts> queryContactsForTranSaveLikeFullName(String fullName);
+
 }

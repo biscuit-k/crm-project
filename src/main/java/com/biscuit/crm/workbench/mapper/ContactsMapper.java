@@ -68,4 +68,17 @@ public interface ContactsMapper {
      */
     List<Contacts> selectAllContacts();
 
+    /**
+     * 查询所有联系人信息，来自新建交易页面
+     * @return
+     */
+    List<Contacts> selectContactsForTranSave();
+
+    /**
+     * 根据联系人名称模糊查询联系人信息，来自新建交易页面
+     * @param fullName
+     * @return
+     */
+    List<Contacts> selectContactsForTranSaveLikeFullName(@Param("fullName") String fullName);
+
 }

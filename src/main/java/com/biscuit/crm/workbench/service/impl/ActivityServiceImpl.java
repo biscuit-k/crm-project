@@ -80,4 +80,14 @@ public class ActivityServiceImpl implements ActivityService {
     public List<Activity> queryClueBindActivityByClueIdAndLikeActivityName(String clueId, String activityName) {
         return activityMapper.selectClueBindActivityByClueIdAndLikeActivityName(clueId , activityName);
     }
+
+    @Override
+    public List<Activity> queryActivityForTranSave() {
+        return activityMapper.selectActivityForTranSave();
+    }
+
+    @Override
+    public List<Activity> queryActivityForTranSaveLikeName(String name) {
+        return activityMapper.selectActivityForTranSaveLikeName(name);
+    }
 }

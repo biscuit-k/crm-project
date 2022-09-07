@@ -39,4 +39,8 @@ public interface ActivityService {
 
     public List<Activity> queryClueBindActivityByClueIdAndLikeActivityName(String clueId, String activityName);
 
+    public List<Activity> queryActivityForTranSave();
+
+    public List<Activity> queryActivityForTranSaveLikeName(String name);
+
 }
