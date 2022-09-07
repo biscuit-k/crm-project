@@ -1,107 +1,113 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=utf-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-<meta charset="UTF-8">
+	<meta charset="UTF-8">
+	<%
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" +
+	request.getServerPort() + request.getContextPath() + "/";
+	%>
+	<base href="<%=basePath%>"/>
 
-<link href="../../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
 
-<style type="text/css">
-.mystage{
-	font-size: 20px;
-	vertical-align: middle;
-	cursor: pointer;
-}
-.closingDate{
-	font-size : 15px;
-	cursor: pointer;
-	vertical-align: middle;
-}
-</style>
-	
-<script type="text/javascript" src="../../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+	<style type="text/css">
+	.mystage{
+		font-size: 20px;
+		vertical-align: middle;
+		cursor: pointer;
+	}
+	.closingDate{
+		font-size : 15px;
+		cursor: pointer;
+		vertical-align: middle;
+	}
+	</style>
 
-<script type="text/javascript">
+	<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 
-	//默认情况下取消和保存按钮是隐藏的
-	var cancelAndSaveBtnDefault = true;
-	
-	$(function(){
-		$("#remark").focus(function(){
-			if(cancelAndSaveBtnDefault){
-				//设置remarkDiv的高度为130px
-				$("#remarkDiv").css("height","130px");
+	<script type="text/javascript">
+
+		//默认情况下取消和保存按钮是隐藏的
+		var cancelAndSaveBtnDefault = true;
+
+		$(function(){
+			$("#remark").focus(function(){
+				if(cancelAndSaveBtnDefault){
+					//设置remarkDiv的高度为130px
+					$("#remarkDiv").css("height","130px");
+					//显示
+					$("#cancelAndSaveBtn").show("2000");
+					cancelAndSaveBtnDefault = false;
+				}
+			});
+
+			$("#cancelBtn").click(function(){
 				//显示
-				$("#cancelAndSaveBtn").show("2000");
-				cancelAndSaveBtnDefault = false;
-			}
+				$("#cancelAndSaveBtn").hide();
+				//设置remarkDiv的高度为130px
+				$("#remarkDiv").css("height","90px");
+				cancelAndSaveBtnDefault = true;
+			});
+
+			$(".remarkDiv").mouseover(function(){
+				$(this).children("div").children("div").show();
+			});
+
+			$(".remarkDiv").mouseout(function(){
+				$(this).children("div").children("div").hide();
+			});
+
+			$(".myHref").mouseover(function(){
+				$(this).children("span").css("color","red");
+			});
+
+			$(".myHref").mouseout(function(){
+				$(this).children("span").css("color","#E6E6E6");
+			});
+
+
+			//阶段提示框
+			$(".mystage").popover({
+				trigger:'manual',
+				placement : 'bottom',
+				html: 'true',
+				animation: false
+			}).on("mouseenter", function () {
+						var _this = this;
+						$(this).popover("show");
+						$(this).siblings(".popover").on("mouseleave", function () {
+							$(_this).popover('hide');
+						});
+					}).on("mouseleave", function () {
+						var _this = this;
+						setTimeout(function () {
+							if (!$(".popover:hover").length) {
+								$(_this).popover("hide")
+							}
+						}, 100);
+					});
 		});
-		
-		$("#cancelBtn").click(function(){
-			//显示
-			$("#cancelAndSaveBtn").hide();
-			//设置remarkDiv的高度为130px
-			$("#remarkDiv").css("height","90px");
-			cancelAndSaveBtnDefault = true;
-		});
-		
-		$(".remarkDiv").mouseover(function(){
-			$(this).children("div").children("div").show();
-		});
-		
-		$(".remarkDiv").mouseout(function(){
-			$(this).children("div").children("div").hide();
-		});
-		
-		$(".myHref").mouseover(function(){
-			$(this).children("span").css("color","red");
-		});
-		
-		$(".myHref").mouseout(function(){
-			$(this).children("span").css("color","#E6E6E6");
-		});
-		
-		
-		//阶段提示框
-		$(".mystage").popover({
-            trigger:'manual',
-            placement : 'bottom',
-            html: 'true',
-            animation: false
-        }).on("mouseenter", function () {
-                    var _this = this;
-                    $(this).popover("show");
-                    $(this).siblings(".popover").on("mouseleave", function () {
-                        $(_this).popover('hide');
-                    });
-                }).on("mouseleave", function () {
-                    var _this = this;
-                    setTimeout(function () {
-                        if (!$(".popover:hover").length) {
-                            $(_this).popover("hide")
-                        }
-                    }, 100);
-                });
-	});
-	
-	
-	
-</script>
+
+
+
+	</script>
 
 </head>
 <body>
-	
+
 	<!-- 返回按钮 -->
 	<div style="position: relative; top: 35px; left: 10px;">
 		<a href="javascript:void(0);" onclick="window.history.back();"><span class="glyphicon glyphicon-arrow-left" style="font-size: 20px; color: #DDDDDD"></span></a>
 	</div>
-	
+
 	<!-- 大标题 -->
 	<div style="position: relative; left: 40px; top: -30px;">
 		<div class="page-header">
 			<h3>动力节点-交易01 <small>￥5,000</small></h3>
 		</div>
-		
+
 	</div>
 
 	<br/>
@@ -131,7 +137,7 @@
 		-----------
 		<span class="closingDate">2010-10-10</span>
 	</div>
-	
+
 	<!-- 详细信息 -->
 	<div style="position: relative; top: 0px;">
 		<div style="position: relative; left: 40px; height: 30px;">
@@ -213,16 +219,16 @@
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -20px;"></div>
 		</div>
 	</div>
-	
+
 	<!-- 备注 -->
 	<div style="position: relative; top: 100px; left: 40px;">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
-		
+
 		<!-- 备注1 -->
 		<div class="remarkDiv" style="height: 60px;">
-			<img title="zhangsan" src="../../image/user-thumbnail.png" style="width: 30px; height:30px;">
+			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
 			<div style="position: relative; top: -40px; left: 40px;" >
 				<h5>哎呦！</h5>
 				<font color="gray">交易</font> <font color="gray">-</font> <b>动力节点-交易01</b> <small style="color: gray;"> 2017-01-22 10:10:10 由zhangsan</small>
@@ -233,10 +239,10 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- 备注2 -->
 		<div class="remarkDiv" style="height: 60px;">
-			<img title="zhangsan" src="../../image/user-thumbnail.png" style="width: 30px; height:30px;">
+			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
 			<div style="position: relative; top: -40px; left: 40px;" >
 				<h5>呵呵！</h5>
 				<font color="gray">交易</font> <font color="gray">-</font> <b>动力节点-交易01</b> <small style="color: gray;"> 2017-01-22 10:20:10 由zhangsan</small>

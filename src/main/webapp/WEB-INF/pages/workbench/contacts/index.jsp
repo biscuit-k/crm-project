@@ -407,7 +407,7 @@
 					<c:forEach items="${requestScope.contactsList}" var="contacts">
 						<tr>
 							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">${contacts.fullname}${contacts.appellation}</a></td>
+							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">${contacts.fullname}${contacts.appellation}</a></td>
 							<td>${contacts.customerId}</td>
 							<td>${contacts.owner}</td>
 							<td>${contacts.source}</td>
@@ -416,7 +416,7 @@
 					</c:forEach>
 						<tr>
 							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">李四</a></td>
+							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四</a></td>
 							<td>动力节点</td>
 							<td>zhangsan</td>
 							<td>广告</td>
@@ -424,7 +424,7 @@
 						</tr>
                         <tr class="active">
                             <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">李四</a></td>
+                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四</a></td>
                             <td>动力节点</td>
                             <td>zhangsan</td>
                             <td>广告</td>

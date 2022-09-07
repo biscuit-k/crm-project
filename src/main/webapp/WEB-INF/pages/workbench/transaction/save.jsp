@@ -1,15 +1,36 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=utf-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-<meta charset="UTF-8">
+	<meta charset="UTF-8">
+	<%
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" +
+	request.getServerPort() + request.getContextPath() + "/";
+	%>
+	<base href="<%=basePath%>"/>
 
-<link href="../../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<link href="../../jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+	<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 
-<script type="text/javascript" src="../../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+
+	<script type="text/javascript">
+		$(function (){
+
+			$("#cancelCreateBtn").click(function (){
+				window.location.href = "workbench/transaction/index.do";
+			});
+
+			$("#saveCreateBtn").click(function (){
+				alert("新增");
+			});
+
+
+		});
+	</script>
 
 </head>
 <body>
@@ -115,10 +136,10 @@
 	
 	
 	<div style="position:  relative; left: 30px;">
-		<h3>修改交易</h3>
+		<h3>创建交易</h3>
 	  	<div style="position: relative; top: -40px; left: 70%;">
-			<button type="button" class="btn btn-primary">保存</button>
-			<button type="button" class="btn btn-default">取消</button>
+			<button type="button" id="saveCreateBtn" class="btn btn-primary">保存</button>
+			<button type="button" id="cancelCreateBtn" class="btn btn-default">取消</button>
 		</div>
 		<hr style="position: relative; top: -40px;">
 	</div>

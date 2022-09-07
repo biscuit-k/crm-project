@@ -329,7 +329,7 @@
     						tr = clueTr.clone(true);
 						}
 						if(i % 2 != 0){
-							tr.addClass("activity");
+							tr.addClass("active");
 						}
 						tr.find("input[type=checkbox]").val(pageData[i].id);
 						tr.find("td").eq(1).find("a").text(pageData[i].fullname);

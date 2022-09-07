@@ -11,15 +11,30 @@
 
 	<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
 	<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+	<link href="jquery/bs_pagination-master/css/jquery.bs_pagination.min.css" type="text/css" rel="stylesheet"/>
+
 
 	<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
 	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script type="text/javascript" src="jquery/bs_pagination-master/js/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="jquery/bs_pagination-master/localization/en.js"></script>
 
 	<script type="text/javascript">
 
 		$(function(){
+
+			// 添加日期插件，让用户选择时间
+			$(".myDate").datetimepicker({
+				language:'zh-CN' , // 语言
+				format:'yyyy-mm-dd' , // 选中日期后，日期的格式
+				minView:'month' , // 配置时间选择器，最大可用选择的时间单位，最精确可用选择到秒，当前配置最大选择到天
+				initialDate:new Date(), // 初始化选择日期，打开日期选择器时默认选中的日期
+				autoclose:true , // 设置选中完日期后是否自动关闭选择器，默认位 false 不关闭，true 为关闭
+				todayBtn:true, // 是否显示快捷选中当前时间的按钮，默认为 false 不显示
+				clearBtn:true // 是否显示清空当前已选择的日期按钮，默认为 false 不显示
+			});
 
 			//定制字段
 			$("#definedColumns > li").click(function(e) {
@@ -29,10 +44,81 @@
 
 			// 点击客户名称查看详情信息
 			$("#tBody").on("click" , ".customerForDetail" , function(){
-				alert($(this).attr("id"));
+				let id = $(this).parent().parent().find("td").eq(0).find("input").attr("id");
+				alert(id);
 			})
 
+			queryCustomerForPage(1 , 10);
+
 		});
+
+		// 分页查询
+		function queryCustomerForPage(pageNo , pageSize){
+
+			$.ajax({
+				url : 'workbench/customer/queryCustomerForPage.do',
+				data:{
+					pageNo : pageNo,
+					pageSize : pageSize
+				},
+				type : 'get',
+				dataType : 'json',
+				success : function (data){
+					var list = data.list;
+					if(list != null && list.length > 0){
+						var trSource = $("#tBody tr").eq(0);
+						trSource.show();
+						$("#tBody tr:not(:eq(0))").remove();
+						for(var i = 0; i < list.length; i++){
+							var tr = trSource.clone(true);
+							if(i == 0){
+								tr = trSource;
+							}
+							if(i % 2 != 0){
+								tr.addClass("active");
+							}
+							tr.find("td").eq(0).find("input").prop("checked",false);
+							tr.find("td").eq(0).find("input").attr("id" , list[i].id);
+							tr.find("td").eq(1).find("a").text(list[i].name);
+							tr.find("td").eq(2).text(list[i].owner);
+							tr.find("td").eq(3).text(list[i].phone);
+							tr.find("td").eq(4).text(list[i].website);
+							$("#tBody").append(tr);
+						}
+					}
+
+					$("#myPage").bs_pagination({
+						currentPage:pageNo, // 当前页码 pageNo
+						totalRows:data.total, // 数据总条数 totalCount
+						rowsPerPage:data.totalSize, // 每页显示的数据条数  pageSize
+						totalPages:data.pages, // 数据总页数，必填参数，没有默认值 totalPageCount
+
+						visiblePageLinks: 5, // 一次可显示几个用于切换的页码按钮
+
+						showGoToPage: true, // 控制是否显示手动输入页码，跳转到指定页码，默为 true 显示
+						showRowsPerPage: true, // 控制是否显示每页条数，默认未 true 显示
+						showRowsInfo: true, // 控制是否显示记录的详细信息 默认未 true 显示
+
+						onChangePage: function (event,pageObj) {
+							// 当用户对分页条的数据进行修改时就会触发该函数，如进行修改每页显示数据条数、页码切换
+							// 触发后该函数会返回切换后页码和每页显示的数据条数，等于返回一个 pageNo 和 pageSize
+							// 封装在 pageObj 中
+
+							// 重置全选按钮
+							$("#customerAllBtn").prop("checked" , false);
+							queryCustomerForPage(pageObj.currentPage,pageObj.rowsPerPage);
+
+						}
+					})
+				}
+			})
+
+			function getPagePluginsPageSize(){
+				return $("#myPage").bs_pagination('getOption' , 'rowsPerPage');
+			}
+
+
+		}
 
 	</script>
 </head>
@@ -94,7 +180,7 @@
                             <div class="form-group">
                                 <label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
                                 <div class="col-sm-10" style="width: 300px;">
-                                    <input type="text" class="form-control" id="create-nextContactTime">
+                                    <input type="text" class="form-control myDate" readonly id="create-nextContactTime">
                                 </div>
                             </div>
                         </div>
@@ -178,7 +264,7 @@
                             <div class="form-group">
                                 <label for="create-nextContactTime2" class="col-sm-2 control-label">下次联系时间</label>
                                 <div class="col-sm-10" style="width: 300px;">
-                                    <input type="text" class="form-control" id="create-nextContactTime2">
+                                    <input type="text" class="form-control myDate" readonly id="create-nextContactTime2">
                                 </div>
                             </div>
                         </div>
@@ -266,7 +352,7 @@
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="customerAllBtn"/></td>
 							<td>名称</td>
 							<td>所有者</td>
 							<td>公司座机</td>
@@ -274,68 +360,19 @@
 						</tr>
 					</thead>
 					<tbody id="tBody">
-					<c:forEach items="${requestScope.customerList}" var="customer">
 						<tr>
 							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" class="customerForDetail" id="${customer.id}">${customer.name}</a></td>
-							<td>${customer.owner}</td>
-							<td>${customer.phone}</td>
-							<td>${customer.website}</td>
-						</tr>
-					</c:forEach>
-						<tr>
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">动力节点</a></td>
+							<td><a style="text-decoration: none; cursor: pointer;" class="customerForDetail">动力节点</a></td>
 							<td>zhangsan</td>
 							<td>010-84846003</td>
 							<td>http://www.bjpowernode.com</td>
 						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">动力节点</a></td>
-                            <td>zhangsan</td>
-                            <td>010-84846003</td>
-                            <td>http://www.bjpowernode.com</td>
-                        </tr>
 					</tbody>
 				</table>
 			</div>
 			
-			<div style="height: 50px; position: relative;top: 30px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
-				</div>
-			</div>
-			
+
+			<div id="myPage"></div>
 		</div>
 		
 	</div>

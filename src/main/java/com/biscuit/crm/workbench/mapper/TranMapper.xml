@@ -296,4 +296,19 @@
        #{tran.contactSummary}, #{tran.nextContactTime})
   </insert>
 
+
+  <!-- List<Tran> selectAllTran(); -->
+  <select id="selectAllTran" resultMap="BaseResultMap">
+    select
+      t.id, u1.name owner, money, t.name, cus.name customer_id, d1.value stage,
+      d2.value type, d3.value source, con.fullname contacts_id
+    from tbl_tran t
+    left join tbl_user u1 on u1.id = t.owner
+    left join tbl_customer cus on cus.id = t.customer_id
+    left join tbl_contacts con on con.id = t.contacts_id
+    left join tbl_dic_value d1 on d1.id = t.stage
+    left join tbl_dic_value d2 on d2.id = t.type
+    left join tbl_dic_value d3 on d3.id = t.source
+  </select>
+
 </mapper>
