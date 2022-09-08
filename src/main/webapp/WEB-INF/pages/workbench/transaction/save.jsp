@@ -36,7 +36,44 @@
 			});
 
 			$("#saveCreateBtn").click(function (){
-				alert("新增");
+				let owner = $("#create-owner").val();
+				let money = $.trim($("#create-money").val());
+				let name = $.trim($("#create-name").val());
+				let expectedDate = $("#create-expectedDate").val();
+				let customerId = $("#create-customerId").val();
+				let stage = $("#create-transactionStage").val();
+				let type = $("#create-transactionType").val();
+				let source = $("#create-source").val();
+				let activityId = $("#create-activityId").val();
+				let contactsId = $("#create-contactsId").val();
+				let description = $("#create-description").val();
+				let contactSummary = $("#create-contactSummary").val();
+				let nextContactTime = $("#create-nextContactTime").val();
+
+				$.ajax({
+					url : 'workbench/transaction/saveCreateTran.do',
+					dataType : 'json',
+					type : 'post',
+					data : {
+						owner : owner,
+						money : money,
+						name : name,
+						expectedDate : expectedDate,
+						customerId : customerId,
+						stage : stage,
+						type : type,
+						source : source,
+						activityId : activityId,
+						contactsId : contactsId,
+						description : description,
+						contactSummary : contactSummary,
+						nextContactTime : nextContactTime
+					},
+					success : function (data){
+
+					}
+				});
+
 			});
 
 			// 选择联系人点击事件
@@ -80,9 +117,9 @@
 			// 选中联系人
 			$("#contactsTBody").on("click" , "input[type=radio]" , function (){
 				let id = $(this).attr("id");
-				let fullname = $(this).parent().parent().find("td").eq(1).text();
+				let fullName = $(this).parent().parent().find("td").eq(1).text();
 				$("#create-contactsId").val(id);
-				$("#create-contactsFullname").val(fullname);
+				$("#create-contactsFullName").val(fullName);
 				$("#findContacts").modal('hide');
 			});
 
@@ -132,6 +169,13 @@
 				$("#create-activityId").val(id);
 				$("#create-activityName").val(name);
 				$("#findMarketActivity").modal('hide');
+			});
+
+
+			// 选中阶段后从服务器获取成交可能性
+			$("#create-transactionStage").change(function (){
+				let stageValue = $(this).val();
+				alert(stageValue)
 			});
 
 
@@ -374,9 +418,9 @@
 		</div>
 		
 		<div class="form-group">
-			<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
+			<label for="create-source" class="col-sm-2 control-label">来源</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-clueSource">
+				<select class="form-control" id="create-source">
 					<option value="0">请选择</option>
 					<c:forEach items="${requestScope.dicValueSource}" var="source">
 						<option value="${source.id}">${source.value}</option>
@@ -391,10 +435,10 @@
 		</div>
 		
 		<div class="form-group">
-			<label for="create-contactsFullname" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" id="create-contactsIdBtn"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-contactsFullName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" id="create-contactsIdBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
 				<input type="hidden" id="create-contactsId"/>
-				<input type="text" class="form-control" id="create-contactsFullname" readonly>
+				<input type="text" class="form-control" id="create-contactsFullName" readonly>
 			</div>
 		</div>
 		
@@ -415,7 +459,7 @@
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-nextContactTime">
+				<input type="text" class="form-control myDate" readonly id="create-nextContactTime">
 			</div>
 		</div>
 		

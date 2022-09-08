@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Controller
 public class TransactionController {
@@ -163,6 +165,26 @@ public class TransactionController {
         return activityList;
     }
 
+
+
+
+    // 保存一条交易信息
+    @RequestMapping("/workbench/transaction/saveCreateTran.do")
+    @ResponseBody
+    public Object saveCreateTran(Tran tran , HttpSession session){
+        ReturnObject returnObject = new ReturnObject();
+
+        return returnObject;
+    }
+
+    @RequestMapping("/workbench/transaction/getPossibilityByStage.do")
+    @ResponseBody
+    public Object getPossibilityByStage(String stageValue){
+        // 解析可能性配置文件
+        ResourceBundle bundle = ResourceBundle.getBundle("possibility");
+        String possibility = bundle.getString(stageValue);
+        return possibility;
+    }
 
     @RequestMapping("/workbench/transaction/edit.do")
     public ModelAndView edit(ModelAndView modelAndView , String id){
