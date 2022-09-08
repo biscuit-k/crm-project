@@ -17,4 +17,9 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Customer> queryAllCustomer() {
         return customerMapper.selectAllCustomer();
     }
+
+    @Override
+    public List<String> queryAllCustomerName(String customerName) {
+        return customerMapper.selectAllCustomerName(customerName);
+    }
 }

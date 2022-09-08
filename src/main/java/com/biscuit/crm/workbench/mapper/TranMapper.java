@@ -67,4 +67,16 @@ public interface TranMapper {
      * @return
      */
     List<Tran> selectAllTran();
+
+
+    /**
+     * 根据 id 查询一条交易信息
+     * @param id
+     * @return
+     */
+    Tran selectTranById(@Param("id") String id);
+
+
+
+
 }

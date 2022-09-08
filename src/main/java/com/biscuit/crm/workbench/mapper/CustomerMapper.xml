@@ -242,4 +242,20 @@
     inner join tbl_user u1 on u1.id = cus.owner
   </select>
 
+  <!-- List<String> selectAllCustomerName(); -->
+  <select id="selectAllCustomerName" resultType="string">
+    select name from tbl_customer
+    <where>
+      <if test="name!=null and name!=''">
+        name like '%${name}%'
+      </if>
+    </where>
+  </select>
+
+
+  <!-- String selectCustomerIdByName(@Param("name") String name); -->
+  <select id="selectCustomerIdByName" resultType="string">
+    select id from tbl_customer where name = #{name}
+  </select>
+
 </mapper>

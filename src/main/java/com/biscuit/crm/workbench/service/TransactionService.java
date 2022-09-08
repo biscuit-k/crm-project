@@ -9,4 +9,5 @@ public interface TransactionService {
 
     public List<Tran> queryAllTransaction();
 
+    int saveCreateTran(Tran tran);
 }

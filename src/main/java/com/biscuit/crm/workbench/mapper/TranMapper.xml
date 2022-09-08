@@ -311,4 +311,11 @@
     left join tbl_dic_value d3 on d3.id = t.source
   </select>
 
+
+  <!-- Tran selectTranById(@Param("id") String id); -->
+  <select id="selectTranById" resultMap="BaseResultMap">
+    select *
+    from tbl_tran tran
+  </select>
+
 </mapper>

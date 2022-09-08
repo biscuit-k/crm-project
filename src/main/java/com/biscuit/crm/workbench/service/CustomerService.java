@@ -8,4 +8,7 @@ public interface CustomerService {
 
     public List<Customer> queryAllCustomer();
 
+
+    public List<String> queryAllCustomerName(String customerName);
+
 }

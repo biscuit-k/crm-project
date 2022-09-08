@@ -2,12 +2,11 @@ package com.biscuit.crm.workbench.web.controller;
 
 import com.biscuit.crm.commons.contants.Contants;
 import com.biscuit.crm.commons.entity.ReturnObject;
+import com.biscuit.crm.commons.utils.DateUtils;
+import com.biscuit.crm.commons.utils.UUIDUtils;
 import com.biscuit.crm.settings.entity.User;
 import com.biscuit.crm.settings.service.UserService;
-import com.biscuit.crm.workbench.entity.Activity;
-import com.biscuit.crm.workbench.entity.Contacts;
-import com.biscuit.crm.workbench.entity.DicValue;
-import com.biscuit.crm.workbench.entity.Tran;
+import com.biscuit.crm.workbench.entity.*;
 import com.biscuit.crm.workbench.service.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -41,6 +42,12 @@ public class TransactionController {
 
     @Autowired
     private ActivityService activityService;
+
+
+    @Autowired
+    private CustomerService customerService;
+
+
 
     @RequestMapping("/workbench/transaction/index.do")
     public ModelAndView index(ModelAndView modelAndView){
@@ -173,7 +180,23 @@ public class TransactionController {
     @ResponseBody
     public Object saveCreateTran(Tran tran , HttpSession session){
         ReturnObject returnObject = new ReturnObject();
-
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        tran.setCreateBy(user.getId());
+        tran.setCreateTime(DateUtils.formateDateTime(new Date()));
+        tran.setId(UUIDUtils.getUUID());
+        try {
+            int row = transactionService.saveCreateTran(tran);
+            if(row > 0){
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setCode(Contants.RETURN_OBJECT_ERROR_MESSAGE_CURRENCY);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setCode(Contants.RETURN_OBJECT_ERROR_MESSAGE_CURRENCY);
+        }
         return returnObject;
     }
 
@@ -185,6 +208,17 @@ public class TransactionController {
         String possibility = bundle.getString(stageValue);
         return possibility;
     }
+
+    @RequestMapping("/workbench/transaction/queryAllCustomerName.do")
+    @ResponseBody
+    public Object queryAllCustomerName(String customerName){
+
+        List<String> customerNameList = customerService.queryAllCustomerName(customerName);
+
+
+        return customerNameList;
+    }
+
 
     @RequestMapping("/workbench/transaction/edit.do")
     public ModelAndView edit(ModelAndView modelAndView , String id){

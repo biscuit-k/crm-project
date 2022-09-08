@@ -16,6 +16,7 @@
 	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script type="text/javascript" src="jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
 
 	<script type="text/javascript">
 		$(function (){
@@ -70,7 +71,11 @@
 						nextContactTime : nextContactTime
 					},
 					success : function (data){
-
+						if(data.code == 1){
+							window.location.href = 'workbench/transaction/index.do';
+						}else{
+							alert(data.message);
+						}
 					}
 				});
 
@@ -174,10 +179,42 @@
 
 			// 选中阶段后从服务器获取成交可能性
 			$("#create-transactionStage").change(function (){
-				let stageValue = $(this).val();
-				alert(stageValue)
+				let stageValue = $(this).find("option:selected").text();
+				if(stageValue != "请选择"){
+					$.ajax({
+						url : 'workbench/transaction/getPossibilityByStage.do',
+						data : {
+							stageValue : stageValue
+						},
+						dataType : 'json',
+						type : 'get',
+						success : function (data){
+							$("#create-possibility").val(data + "%");
+						}
+					});
+				}else{
+					$("#create-possibility").val("");
+				}
+
 			});
 
+
+			// 使用插件完成根据部分客户名称模糊查询搜索完整客户名称
+			$("#create-customerId").typeahead({
+				source : function (jquery , process){
+					$.ajax({
+						url : 'workbench/transaction/queryAllCustomerName.do',
+						dataType : 'json',
+						data : {
+							customerName : jquery
+						},
+						type : 'post',
+						success : function (data){
+							process(data);
+						}
+					});
+				}
+			});
 
 		});
 
@@ -253,7 +290,7 @@
 						}
 					}
 				}
-			})
+			});
 		}
 
 

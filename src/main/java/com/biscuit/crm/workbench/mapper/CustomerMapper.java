@@ -69,4 +69,19 @@ public interface CustomerMapper {
      */
     List<Customer> selectAllCustomer();
 
+    /**
+     * 查询所有客户名称
+     * @param
+     * @return
+     */
+    List<String> selectAllCustomerName(@Param("name") String customerName);
+
+
+    /**
+     * 根据客户名称查询客户Id
+     * @param name
+     * @return
+     */
+    String selectCustomerIdByName(@Param("name") String name);
+
 }
