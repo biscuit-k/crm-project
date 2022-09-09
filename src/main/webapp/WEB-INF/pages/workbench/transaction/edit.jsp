@@ -20,13 +20,123 @@
 	<script type="text/javascript">
 		$(function (){
 
+			// 添加日期插件，让用户选择时间
+			$(".myDate").datetimepicker({
+				language:'zh-CN' , // 语言
+				format:'yyyy-mm-dd' , // 选中日期后，日期的格式
+				minView:'month' , // 配置时间选择器，最大可用选择的时间单位，最精确可用选择到秒，当前配置最大选择到天
+				initialDate:new Date(), // 初始化选择日期，打开日期选择器时默认选中的日期
+				autoclose:true , // 设置选中完日期后是否自动关闭选择器，默认位 false 不关闭，true 为关闭
+				todayBtn:true, // 是否显示快捷选中当前时间的按钮，默认为 false 不显示
+				clearBtn:true // 是否显示清空当前已选择的日期按钮，默认为 false 不显示
+			});
+
 			$("#cancelEditBtn").click(function (){
 				window.location.href = "workbench/transaction/index.do";
 			});
 
 			$("#saveEditBtn").click(function (){
-				alert("修改");
+				let id = '${requestScope.tran.id}';
+				alert(id);
 			});
+
+			// 点击搜索联系人按钮
+			$("#queryContactsBtn , #create-contactsName").click(function (){
+
+				let contactsId = $("#create-contactsId").val();
+				$.ajax({
+					url : 'workbench/transaction/queryContactsNotContactsId.do',
+					dataType : 'json',
+					type : 'get',
+					data : {
+						contactsId : contactsId
+					},
+					success : function (data){
+						if(data.code == 1){
+							let trSource = $("#contactsTBody").find("tr").eq(0);
+							trSource.show();
+							$("#contactsTBody tr:not(:eq(0))").remove();
+							for (let i = 0; i < data.returnData.length; i++) {
+								let tr = trSource.clone(true);
+								if(i == 0){
+									tr = trSource;
+								}
+								tr.find("td").eq(0).find("input").attr("id" , data.returnData[i].id);
+								tr.find("td").eq(1).text(data.returnData[i].fullname);
+								tr.find("td").eq(2).text(data.returnData[i].email);
+								tr.find("td").eq(3).text(data.returnData[i].mphone);
+
+								tr.find("td").eq(0).find("input").prop("checked",false);
+								$("#contactsTBody").append(tr);
+							}
+							$("#findContacts").modal('show');
+						}else{
+							$("#contactsTBody tr:not(:eq(0))").remove();
+							$("#contactsTBody").find("tr").eq(0).hide();
+							alert(data.message);
+						}
+					}
+				});
+			});
+
+			// 选中联系人
+			$("#contactsTBody").on("click" , "input[type=radio]" , function (){
+				let id = $(this).attr("id");
+				let fullName = $(this).parent().parent().find("td").eq(1).text();
+				$("#create-contactsId").val(id);
+				$("#create-contactsName").val(fullName);
+				$("#findContacts").modal('hide');
+			});
+
+
+			// 点击搜索市场活动按钮
+			$("#queryActivityBtn , #create-activityName").click(function (){
+				let activityId = $("#create-activityId").val();
+				$.ajax({
+					url : 'workbench/transaction/queryActivityNotActivityId.do',
+					dataType : 'json',
+					type : 'get',
+					data : {
+						activityId : activityId
+					},
+					success : function (data){
+						if(data.code == 1){
+							let trSource = $("#activityTBody").find("tr").eq(0);
+							trSource.show();
+							$("#activityTBody tr:not(:eq(0))").remove();
+							for (let i = 0; i < data.returnData.length; i++) {
+								let tr = trSource.clone(true);
+								if(i == 0){
+									tr = trSource;
+								}
+								tr.find("td").eq(0).find("input").attr("id" , data.returnData[i].id);
+								tr.find("td").eq(1).text(data.returnData[i].name);
+								tr.find("td").eq(2).text(data.returnData[i].startDate);
+								tr.find("td").eq(3).text(data.returnData[i].endDate);
+								tr.find("td").eq(4).text(data.returnData[i].owner);
+
+								tr.find("td").eq(0).find("input").prop("checked",false);
+								$("#activityTBody").append(tr);
+							}
+							$("#findMarketActivity").modal('show');
+						}else{
+							$("#activityTBody tr:not(:eq(0))").remove();
+							$("#activityTBody").find("tr").eq(0).hide();
+							alert(data.message);
+						}
+					}
+				});
+			});
+
+			// 选中市场活动信息
+			$("#activityTBody").on("click" , "input[type=radio]" , function (){
+				let id = $(this).attr("id");
+				let name = $(this).parent().parent().find("td").eq(1).text();
+				$("#create-activityId").val(id);
+				$("#create-activityName").val(name);
+				$("#findMarketActivity").modal('hide');
+			});
+
 
 
 		});
@@ -63,14 +173,7 @@
 								<td>所有者</td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="activityTBody">
 							<tr>
 								<td><input type="radio" name="activity"/></td>
 								<td>发传单</td>
@@ -113,13 +216,7 @@
 								<td>手机</td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>李四</td>
-								<td>lisi@bjpowernode.com</td>
-								<td>12345678901</td>
-							</tr>
+						<tbody id="contactsTBody">
 							<tr>
 								<td><input type="radio" name="activity"/></td>
 								<td>李四</td>
@@ -146,47 +243,41 @@
 		<div class="form-group">
 			<label for="create-transactionOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-transactionOwner">
-				  <option>zhangsan</option>
-				  <option>lisi</option>
-				  <option>wangwu</option>
+				<select class="form-control" id="create-transactionOwner" value="${requestScope.tran.owner}">
+				  <c:forEach items="${requestScope.userList}" var="user">
+					  <option ${requestScope.tran.owner==user.id?'selected':''} value="${user.id}">${user.name}</option>
+				  </c:forEach>
 				</select>
 			</div>
 			<label for="create-amountOfMoney" class="col-sm-2 control-label">金额</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-amountOfMoney">
+				<input type="text" class="form-control" id="create-amountOfMoney" value="${requestScope.tran.money}">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-transactionName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-transactionName">
+				<input type="text" class="form-control" value="${requestScope.tran.name}" id="create-transactionName">
 			</div>
 			<label for="create-expectedClosingDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-expectedClosingDate">
+				<input type="text" class="form-control myDate" readonly value="${requestScope.tran.expectedDate}" id="create-expectedClosingDate">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="create-accountName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-customerName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-accountName" placeholder="支持自动补全，输入客户不存在则新建">
+				<input type="hidden" id="create-customerId" value="${requestScope.customer.id}"/>
+				<input type="text" class="form-control" id="create-customerName"value="${requestScope.customer.name}" placeholder="支持自动补全，输入客户不存在则新建">
 			</div>
 			<label for="create-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-			  <select class="form-control" id="create-transactionStage">
-			  	<option></option>
-			  	<option>资质审查</option>
-			  	<option>需求分析</option>
-			  	<option>价值建议</option>
-			  	<option>确定决策者</option>
-			  	<option>提案/报价</option>
-			  	<option>谈判/复审</option>
-			  	<option>成交</option>
-			  	<option>丢失的线索</option>
-			  	<option>因竞争丢失关闭</option>
+			  <select class="form-control" id="create-transactionStage" value="${requestScope.tran.stage}">
+			  	<c:forEach items="${requestScope.dicValueStage}" var="stage">
+					<option ${requestScope.tran.stage==stage.id?'selected':''} value="${stage.id}">${stage.value}</option>
+				</c:forEach>
 			  </select>
 			</div>
 		</div>
@@ -195,14 +286,14 @@
 			<label for="create-transactionType" class="col-sm-2 control-label">类型</label>
 			<div class="col-sm-10" style="width: 300px;">
 				<select class="form-control" id="create-transactionType">
-				  <option></option>
-				  <option>已有业务</option>
-				  <option>新业务</option>
+					<c:forEach items="${requestScope.dicValueTransactionType}" var="transactionType">
+						<option ${requestScope.tran.type==transactionType.id?'selected':''} value="${transactionType.id}">${transactionType.value}</option>
+					</c:forEach>
 				</select>
 			</div>
 			<label for="create-possibility" class="col-sm-2 control-label">可能性</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-possibility">
+				<input type="text" class="form-control" readonly value="${requestScope.possibility}%" id="create-possibility">
 			</div>
 		</div>
 		
@@ -210,54 +301,44 @@
 			<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
 			<div class="col-sm-10" style="width: 300px;">
 				<select class="form-control" id="create-clueSource">
-				  <option></option>
-				  <option>广告</option>
-				  <option>推销电话</option>
-				  <option>员工介绍</option>
-				  <option>外部介绍</option>
-				  <option>在线商场</option>
-				  <option>合作伙伴</option>
-				  <option>公开媒介</option>
-				  <option>销售邮件</option>
-				  <option>合作伙伴研讨会</option>
-				  <option>内部研讨会</option>
-				  <option>交易会</option>
-				  <option>web下载</option>
-				  <option>web调研</option>
-				  <option>聊天</option>
+				  <c:forEach items="${requestScope.dicValueSource}" var="source">
+					  <option ${requestScope.tran.source==source.id?'selected':''} value="${source.id}">${source.value}</option>
+				  </c:forEach>
 				</select>
 			</div>
-			<label for="create-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-activityName" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);"id="queryActivityBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-activitySrc">
+				<input type="hidden" id="create-activityId" value="${requestScope.activity.id}"/>
+				<input type="text" class="form-control" readonly value="${requestScope.activity.name}" id="create-activityName">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" id="queryContactsBtn"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-contactsName">
+				<input type="hidden" id="create-contactsId" value="${requestScope.contacts.id}"/>
+				<input type="text" readonly class="form-control" value="${requestScope.contacts.fullname}" id="create-contactsName">
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label for="create-describe" class="col-sm-2 control-label">描述</label>
+			<label for="create-description" class="col-sm-2 control-label">描述</label>
 			<div class="col-sm-10" style="width: 70%;">
-				<textarea class="form-control" rows="3" id="create-describe"></textarea>
+				<textarea class="form-control" rows="3" id="create-description">${requestScope.tran.description}</textarea>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-contactSummary" class="col-sm-2 control-label">联系纪要</label>
 			<div class="col-sm-10" style="width: 70%;">
-				<textarea class="form-control" rows="3" id="create-contactSummary"></textarea>
+				<textarea class="form-control" rows="3" id="create-contactSummary">${requestScope.tran.contactSummary}</textarea>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-nextContactTime">
+				<input type="text" class="form-control myDate" readonly value="${requestScope.tran.nextContactTime}" id="create-nextContactTime">
 			</div>
 		</div>
 		

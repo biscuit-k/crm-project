@@ -312,10 +312,31 @@
   </select>
 
 
+  <!-- Tran selectTranByIdForDetail(@Param("id") String id); -->
+  <select id="selectTranByIdForDetail" resultMap="BaseResultMap">
+    select t.id , t.money , u1.name owner, cus.name customer_id , t.expected_date , u2.name create_by , a.name activity_id,
+           con.fullname contacts_id , u3.name edit_by , d1.value stage , d2.value source , d3.value type ,
+           t.name , t.create_time , t.edit_time , t.description , t.contact_summary , t.next_contact_time
+    from tbl_tran t
+    left join tbl_user u1 on u1.id = t.owner
+    left join tbl_customer cus on cus.id = t.customer_id
+    left join tbl_user u2 on u2.id = t.create_by
+    left join tbl_user u3 on u3.id = t.edit_by
+    left join tbl_activity a on a.id = t.activity_id
+    left join tbl_contacts con on con.id = t.contacts_id
+    left join tbl_dic_value d1 on d1.id = t.stage
+    left join tbl_dic_value d2 on d2.id = t.source
+    left join tbl_dic_value d3 on d3.id = t.type
+    where t.id = #{id}
+  </select>
+
+
   <!-- Tran selectTranById(@Param("id") String id); -->
   <select id="selectTranById" resultMap="BaseResultMap">
-    select *
-    from tbl_tran tran
+    select
+    <include refid="Base_Column_List"/>
+    from tbl_tran
+    where id = #{id}
   </select>
 
 </mapper>

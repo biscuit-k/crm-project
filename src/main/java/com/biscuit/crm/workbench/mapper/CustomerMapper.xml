@@ -258,4 +258,13 @@
     select id from tbl_customer where name = #{name}
   </select>
 
+  <!-- Customer selectCustomerById(@Param("id") String id); -->
+  <select id="selectCustomerById" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from tbl_customer
+    where id = #{id}
+  </select>
+
+
 </mapper>

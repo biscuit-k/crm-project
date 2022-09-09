@@ -11,4 +11,6 @@ public interface CustomerService {
 
     public List<String> queryAllCustomerName(String customerName);
 
+    public Customer queryCustomerById(String id);
+
 }

@@ -22,4 +22,9 @@ public class CustomerServiceImpl implements CustomerService {
     public List<String> queryAllCustomerName(String customerName) {
         return customerMapper.selectAllCustomerName(customerName);
     }
+
+    @Override
+    public Customer queryCustomerById(String id) {
+        return customerMapper.selectCustomerById(id);
+    }
 }

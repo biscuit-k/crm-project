@@ -54,4 +54,14 @@ public class TransactionServiceImpl implements TransactionService {
 
         return row;
     }
+
+    @Override
+    public Tran queryTransactionByIdForDetail(String id) {
+        return tranMapper.selectTranByIdForDetail(id);
+    }
+
+    @Override
+    public Tran queryTransactionById(String id) {
+        return tranMapper.selectTranById(id);
+    }
 }

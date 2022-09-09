@@ -81,4 +81,12 @@ public interface ContactsMapper {
      */
     List<Contacts> selectContactsForTranSaveLikeFullName(@Param("fullName") String fullName);
 
+
+    /**
+     * 根据 id 查询联系人信息
+     * @param id
+     * @return
+     */
+    Contacts selectContactsById(@Param("id") String id);
+
 }

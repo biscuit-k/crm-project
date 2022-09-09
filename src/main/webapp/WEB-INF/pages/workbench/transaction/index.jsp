@@ -39,7 +39,8 @@
 				var chooseTr = $("#tBody tr input[type=checkbox]:checked");
 				if(chooseTr.size() > 0){
 					if (chooseTr.size() == 1){
-						window.location.href = "workbench/transaction/edit.do"
+						let id = chooseTr.attr("id");
+						window.location.href = "workbench/transaction/edit.do?id="+id;
 					}else{
 						alert("最多只能选择一条要修改的交易信息!");
 					}

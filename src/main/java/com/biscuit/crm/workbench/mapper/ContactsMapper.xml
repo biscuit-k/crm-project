@@ -314,4 +314,10 @@
     </where>
   </select>
 
+
+  <!-- Contacts selectContactsById(@Param("id") String id); -->
+  <select id="selectContactsById" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from tbl_contacts where id = #{id}
+  </select>
+
 </mapper>

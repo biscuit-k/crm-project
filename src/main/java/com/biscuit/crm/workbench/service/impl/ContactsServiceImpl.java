@@ -28,4 +28,9 @@ public class ContactsServiceImpl implements ContactsService {
     public List<Contacts> queryContactsForTranSaveLikeFullName(String fullName) {
         return contactsMapper.selectContactsForTranSaveLikeFullName(fullName);
     }
+
+    @Override
+    public Contacts queryContactsById(String id) {
+        return contactsMapper.selectContactsById(id);
+    }
 }

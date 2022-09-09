@@ -70,6 +70,14 @@ public interface TranMapper {
 
 
     /**
+     * 根据 id 查询一条交易信息，详细信息
+     * @param id
+     * @return
+     */
+    Tran selectTranByIdForDetail(@Param("id") String id);
+
+
+    /**
      * 根据 id 查询一条交易信息
      * @param id
      * @return

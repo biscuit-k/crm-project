@@ -13,4 +13,6 @@ public interface ContactsService {
 
     public List<Contacts> queryContactsForTranSaveLikeFullName(String fullName);
 
+    public Contacts queryContactsById(String id);
+
 }

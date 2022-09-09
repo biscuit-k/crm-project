@@ -93,6 +93,15 @@ public class TransactionController {
 
     @RequestMapping("/workbench/transaction/detail.do")
     public ModelAndView detail(ModelAndView modelAndView , String id){
+
+        Tran tran = transactionService.queryTransactionByIdForDetail(id);
+
+        // 获取可行性
+        ResourceBundle bundle = ResourceBundle.getBundle("possibility");
+        String possibility = bundle.getString(tran.getStage());
+
+        modelAndView.addObject("tran" , tran);
+        modelAndView.addObject("possibility" , possibility);
         modelAndView.setViewName("workbench/transaction/detail");
         return modelAndView;
     }
@@ -222,8 +231,92 @@ public class TransactionController {
 
     @RequestMapping("/workbench/transaction/edit.do")
     public ModelAndView edit(ModelAndView modelAndView , String id){
+
+        Tran tran = transactionService.queryTransactionById(id);
+        modelAndView.addObject("tran" , tran);
+
+        String typeCodeStage = dicTypeService.queryTypeCodeByName("阶段");
+        List<DicValue> dicValueStage = dicValueService.queryDicValueByTypeCode(typeCodeStage);
+        modelAndView.addObject("dicValueStage" ,dicValueStage );
+
+        String typeCodeTransactionType = dicTypeService.queryTypeCodeByName("交易类型");
+        List<DicValue> dicValueTransactionType = dicValueService.queryDicValueByTypeCode(typeCodeTransactionType);
+        modelAndView.addObject("dicValueTransactionType" ,dicValueTransactionType );
+
+        String typeCodeSource = dicTypeService.queryTypeCodeByName("来源");
+        List<DicValue> dicValueSource = dicValueService.queryDicValueByTypeCode(typeCodeSource);
+        modelAndView.addObject("dicValueSource" ,dicValueSource );
+
+        List<User> userList = userService.queryAllUsers();
+        modelAndView.addObject("userList" , userList);
+
+        // 查询可行性
+        ResourceBundle bundle = ResourceBundle.getBundle("possibility");
+        for (DicValue dicValue : dicValueStage) {
+            if(tran.getStage().equals(dicValue.getId())){
+                String possibility = bundle.getString(dicValue.getValue());
+                modelAndView.addObject("possibility" , possibility);
+            }
+        }
+
+        // 查询当前市场活动信息
+        Activity activity = activityService.queryActivityById(tran.getActivityId());
+        // 查询当前联系人信息
+        Contacts contacts = contactsService.queryContactsById(tran.getContactsId());
+        // 查询客户信息
+        Customer customer = customerService.queryCustomerById(tran.getCustomerId());
+
+        modelAndView.addObject("contacts" , contacts);
+        modelAndView.addObject("customer" , customer);
+        modelAndView.addObject("activity" , activity);
+
         modelAndView.setViewName("workbench/transaction/edit");
         return modelAndView;
+    }
+
+
+    // 查询所有市场活动信息，但排除一个之定id的市场活动
+    @RequestMapping("/workbench/transaction/queryActivityNotActivityId.do")
+    @ResponseBody
+    public Object queryActivityNotActivityId(String activityId){
+        ReturnObject returnObject = new ReturnObject();
+        List<Activity> activityList = activityService.queryAllActivity();
+        for (Activity activity : activityList) {
+            if(activity.getId().equals(activityId)){
+                activityList.remove(activity);
+                break;
+            }
+        }
+        if(activityList != null && activityList.size() > 0){
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            returnObject.setReturnData(activityList);
+        }else{
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage(Contants.RETURN_OBJECT_ERROR_MESSAGE_CURRENCY);
+        }
+        return returnObject;
+    }
+
+    // 查询所有联系人信息，但排除一个之定id的联系人信息
+    @RequestMapping("/workbench/transaction/queryContactsNotContactsId.do")
+    @ResponseBody
+    public Object queryContactsNotContactsId(String contactsId){
+        ReturnObject returnObject = new ReturnObject();
+        List<Contacts> contactsList = contactsService.queryAllContacts();
+        for (Contacts contacts : contactsList) {
+            if(contacts.getId().equals(contactsId)){
+                contactsList.remove(contacts);
+                break;
+            }
+        }
+        if(contactsList != null && contactsList.size() > 0){
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            returnObject.setReturnData(contactsList);
+        }else{
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage(Contants.RETURN_OBJECT_ERROR_MESSAGE_CURRENCY);
+        }
+        return returnObject;
     }
 
 

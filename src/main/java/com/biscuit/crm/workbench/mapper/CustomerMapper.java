@@ -84,4 +84,11 @@ public interface CustomerMapper {
      */
     String selectCustomerIdByName(@Param("name") String name);
 
+    /**
+     * 根据客户id查询各户信息
+     * @param id
+     * @return
+     */
+    Customer selectCustomerById(@Param("id") String id);
+
 }
