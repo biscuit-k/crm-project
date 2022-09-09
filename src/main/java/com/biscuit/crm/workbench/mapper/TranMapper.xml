@@ -25,6 +25,7 @@
     <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="contact_summary" property="contactSummary" jdbcType="VARCHAR" />
     <result column="next_contact_time" property="nextContactTime" jdbcType="CHAR" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
@@ -316,7 +317,8 @@
   <select id="selectTranByIdForDetail" resultMap="BaseResultMap">
     select t.id , t.money , u1.name owner, cus.name customer_id , t.expected_date , u2.name create_by , a.name activity_id,
            con.fullname contacts_id , u3.name edit_by , d1.value stage , d2.value source , d3.value type ,
-           t.name , t.create_time , t.edit_time , t.description , t.contact_summary , t.next_contact_time
+           t.name , t.create_time , t.edit_time , t.description , t.contact_summary , t.next_contact_time,
+           d1.order_no order_no
     from tbl_tran t
     left join tbl_user u1 on u1.id = t.owner
     left join tbl_customer cus on cus.id = t.customer_id

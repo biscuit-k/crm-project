@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.print.DocFlavor;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,6 +47,9 @@ public class TransactionController {
 
     @Autowired
     private CustomerService customerService;
+    
+    @Autowired
+    private TransactionRemarkService transactionRemarkService;
 
 
 
@@ -99,6 +103,12 @@ public class TransactionController {
         // 获取可行性
         ResourceBundle bundle = ResourceBundle.getBundle("possibility");
         String possibility = bundle.getString(tran.getStage());
+
+
+
+        String typeCodeStage = dicTypeService.queryTypeCodeByName("阶段");
+        List<DicValue> stageList = dicValueService.queryDicValueByTypeCode(typeCodeStage);
+        modelAndView.addObject("stageList" ,stageList );
 
         modelAndView.addObject("tran" , tran);
         modelAndView.addObject("possibility" , possibility);
@@ -227,6 +237,43 @@ public class TransactionController {
 
         return customerNameList;
     }
+
+
+    // 查询当前交易的所有备注信息
+    @RequestMapping("/workbench/transaction/queryTranRemarkByTranId.do")
+    @ResponseBody
+    public Object queryTranRemarkByTranId(String tranId){
+        List<TranRemark> tranRemarkList = transactionRemarkService.queryTransactionRemarkByTranId(tranId);
+        return tranRemarkList;
+    }
+
+    // 保存一条交易备注信息
+    @RequestMapping("/workbench/transaction/saveCreateTransactionRemark.do")
+    @ResponseBody
+    public Object saveCreateTransactionRemark(String tranId , String noteContent , HttpSession session){
+        ReturnObject returnObject = new ReturnObject();
+
+        TranRemark tranRemark = new TranRemark();
+        User user = (User) session.getAttribute(Contants.SESSION_USER);
+        tranRemark.setId(UUIDUtils.getUUID());
+        tranRemark.setCreateBy(user.getId());
+        tranRemark.setCreateTime(DateUtils.formateDateTime(new Date()));
+        tranRemark.setEditFlag("0");
+        tranRemark.setNoteContent(noteContent);
+        tranRemark.setTranId(tranId);
+
+        try {
+            transactionRemarkService.saveCreateTransactionRemark(tranRemark);
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+        } catch (Exception e){
+            e.printStackTrace();
+            returnObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage(Contants.RETURN_OBJECT_ERROR_MESSAGE_CURRENCY);
+        }
+
+        return returnObject;
+    }
+
 
 
     @RequestMapping("/workbench/transaction/edit.do")

@@ -177,4 +177,22 @@
     </foreach>
   </insert>
 
+  <!-- List<TranRemark> selectTranRemarkByTranId(@Param("tranId") String tranId); -->
+  <select id="selectTranRemarkByTranId" resultMap="BaseResultMap">
+    select tr.id , tr.note_content , u1.name create_by , tr.create_time , u2.name edit_by , tr.edit_time , tr.edit_flag
+    from tbl_tran_remark tr
+    inner join tbl_user u1 on u1.id = tr.create_by
+    left join tbl_user u2 on u2.id = tr.edit_by
+    where tr.tran_id = #{tranId}
+  </select>
+
+
+  <!-- int insertTranRemark(@Param("tranRemark") TranRemark tranRemark); -->
+  <insert id="insertTranRemark">
+    insert into tbl_tran_remark(id , note_content , create_by , create_time , edit_by , edit_time , edit_flag , tran_id)
+    values (#{tranRemark.id} , #{tranRemark.noteContent} , #{tranRemark.createBy} , #{tranRemark.createTime} ,
+            #{tranRemark.editBy} , #{tranRemark.editTime} , #{tranRemark.editFlag} , #{tranRemark.tranId} )
+  </insert>
+
+
 </mapper>

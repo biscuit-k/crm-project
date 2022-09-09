@@ -33,7 +33,7 @@
 		var cancelAndSaveBtnDefault = true;
 
 		$(function(){
-			$("#remark").focus(function(){
+			$("#noteContent").focus(function(){
 				if(cancelAndSaveBtnDefault){
 					//设置remarkDiv的高度为130px
 					$("#remarkDiv").css("height","130px");
@@ -46,6 +46,8 @@
 			$("#cancelBtn").click(function(){
 				//显示
 				$("#cancelAndSaveBtn").hide();
+
+				$("#noteContent").val("");
 				//设置remarkDiv的高度为130px
 				$("#remarkDiv").css("height","90px");
 				cancelAndSaveBtnDefault = true;
@@ -92,6 +94,92 @@
 
 
 
+		$(function (){
+			// 页面加载完成后加载当前交易的备注信息
+			let tranId = '${requestScope.tran.id}';
+			loadCurrentTranRemark(tranId);
+
+
+			// 删除一条备注信息
+			$("#tranRemarkDiv").on("click" , ".glyphicon-remove" , function (){
+				let tranRemarkId = $(this).parent().parent().parent().parent().attr("id");
+				alert(tranRemarkId);
+			});
+
+			// 新增一条备注信息
+			$("#saveCreateTramRemarkBtn").click(function (){
+				let noteContent = $("#noteContent").val();
+				let tranId = '${requestScope.tran.id}';
+				if(noteContent != null && noteContent != ''){
+					$.ajax({
+						url : 'workbench/transaction/saveCreateTransactionRemark.do',
+						data : {
+							tranId : tranId,
+							noteContent : noteContent
+						},
+						dataType: 'json',
+						type : 'post',
+						success : function (data){
+							if(data.code == 1){
+								alert("备注成功！");
+								$("#noteContent").val("");
+								loadCurrentTranRemark(tranId);
+								$("#cancelBtn").click();
+							}else{
+								alert(data.message);
+							}
+						}
+					});
+				}else{
+					alert("备注内容不可为空！");
+				}
+			});
+
+
+		});
+
+		function loadCurrentTranRemark(tranId){
+			$.ajax({
+				url : 'workbench/transaction/queryTranRemarkByTranId.do',
+				data : {
+					tranId : tranId
+				},
+				dataType : 'json',
+				type : 'get',
+				success : function (data){
+					let tranRemarkSource = $(".tranRemark").eq(0);
+					$(".tranRemark:not(:eq(0))").remove();
+
+					if(data == null || data.length <= 0){
+						tranRemarkSource.hide();
+						return;
+					}
+
+					tranRemarkSource.show();
+					for (let i = 0; i < data.length; i++) {
+						let tranRemark = tranRemarkSource.clone(true);
+						if(i == 0){
+							tranRemark = tranRemarkSource;
+						}
+
+						tranRemark.attr("id" , data[i].id);
+						tranRemark.find("h5").text(data[i].noteContent);
+						tranRemark.find("b").text('${requestScope.tran.name}');
+						if(data[i].editFlag == 0){
+							tranRemark.find("small").text(data[i].createTime + " 由" + data[i].createBy + " 创建");
+						}else{
+							tranRemark.find("small").text(data[i].editTime + " 由" + data[i].editBy + " 修改");
+						}
+						$("#tranRemarkDiv").append(tranRemark);
+
+					}
+					$("#tranRemarkDiv").append($(".create-tranRemark"));
+				}
+			})
+		}
+
+
+
 	</script>
 
 </head>
@@ -117,24 +205,19 @@
 	<!-- 阶段状态 -->
 	<div style="position: relative; left: 40px; top: -50px;">
 		阶段&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="资质审查" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="需求分析" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="价值建议" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="确定决策者" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-map-marker mystage" data-toggle="popover" data-placement="bottom" data-content="提案/报价" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="谈判/复审"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="成交"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="丢失的线索"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="因竞争丢失关闭"></span>
-		-----------
+		<c:forEach items="${requestScope.stageList}" var="stage">
+			<c:if test="${stage.value == requestScope.tran.stage}">
+				<span class="glyphicon glyphicon-map-marker mystage" data-toggle="popover" data-placement="bottom" data-content="${stage.value}" style="color: #90F790;"></span>
+			</c:if>
+			<c:if test="${stage.orderNo < requestScope.tran.orderNo}">
+				<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="${stage.value}" style="color: #90F790;"></span>
+			</c:if>
+			<c:if test="${stage.orderNo > requestScope.tran.orderNo}">
+				<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="${stage.value}"></span>
+			</c:if>
+			-----------
+		</c:forEach>
+
 		<span class="closingDate">2010-10-10</span>
 	</div>
 
@@ -221,13 +304,13 @@
 	</div>
 
 	<!-- 备注 -->
-	<div style="position: relative; top: 100px; left: 40px;">
+	<div style="position: relative; top: 100px; left: 40px;" id="tranRemarkDiv">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
 
 		<!-- 备注1 -->
-		<div class="remarkDiv" style="height: 60px;">
+		<div class="remarkDiv tranRemark" style="height: 60px;">
 			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
 			<div style="position: relative; top: -40px; left: 40px;" >
 				<h5>哎呦！</h5>
@@ -239,27 +322,13 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- 备注2 -->
-		<div class="remarkDiv" style="height: 60px;">
-			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
-			<div style="position: relative; top: -40px; left: 40px;" >
-				<h5>呵呵！</h5>
-				<font color="gray">交易</font> <font color="gray">-</font> <b>动力节点-交易01</b> <small style="color: gray;"> 2017-01-22 10:20:10 由zhangsan</small>
-				<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
-				</div>
-			</div>
-		</div>
 		
-		<div id="remarkDiv" style="background-color: #E6E6E6; width: 870px; height: 90px;">
+		<div id="remarkDiv" class="create-tranRemark" style="background-color: #E6E6E6; width: 870px; height: 90px;">
 			<form role="form" style="position: relative;top: 10px; left: 10px;">
-				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
+				<textarea id="noteContent" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
 				<p id="cancelAndSaveBtn" style="position: relative;left: 737px; top: 10px; display: none;">
 					<button id="cancelBtn" type="button" class="btn btn-default">取消</button>
-					<button type="button" class="btn btn-primary">保存</button>
+					<button type="button" id="saveCreateTramRemarkBtn" class="btn btn-primary">保存</button>
 				</p>
 			</form>
 		</div>
