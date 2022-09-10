@@ -1,5 +1,6 @@
 package com.biscuit.crm.workbench.mapper;
 
+import com.biscuit.crm.workbench.entity.FunnelVO;
 import com.biscuit.crm.workbench.entity.Tran;
 import org.apache.ibatis.annotations.Param;
 
@@ -84,6 +85,12 @@ public interface TranMapper {
      */
     Tran selectTranById(@Param("id") String id);
 
+
+    /**
+     * 查询所有交易信息，并按照交易阶段进行分组，查询每种阶段的数据量
+     * @return
+     */
+    List<FunnelVO> selectCountOfTranGroupByStage();
 
 
 

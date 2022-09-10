@@ -341,4 +341,16 @@
     where id = #{id}
   </select>
 
+
+  <!-- List<FunnelVO> selectCountOfTranGroupByStage(); -->
+  <select id="selectCountOfTranGroupByStage" resultType="com.biscuit.crm.workbench.entity.FunnelVO">
+    select
+        count(t.id) value, d.value name
+    from tbl_tran t
+    right join tbl_dic_value d on d.id = t.stage
+    where type_code = 'stage'
+    group by d.value
+  </select>
+
+
 </mapper>

@@ -1,5 +1,6 @@
 package com.biscuit.crm.workbench.service;
 
+import com.biscuit.crm.workbench.entity.FunnelVO;
 import com.biscuit.crm.workbench.entity.Tran;
 import com.biscuit.crm.workbench.mapper.TranMapper;
 
@@ -15,5 +16,7 @@ public interface TransactionService {
     public Tran queryTransactionByIdForDetail(String id);
 
     public Tran queryTransactionById(String id);
+
+    public List<FunnelVO> queryCountOfTranGroupByStage();
 
 }

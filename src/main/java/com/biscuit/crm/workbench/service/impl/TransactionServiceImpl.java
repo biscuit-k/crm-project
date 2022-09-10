@@ -4,6 +4,7 @@ import com.biscuit.crm.commons.utils.DateUtils;
 import com.biscuit.crm.commons.utils.StringUtils;
 import com.biscuit.crm.commons.utils.UUIDUtils;
 import com.biscuit.crm.workbench.entity.Customer;
+import com.biscuit.crm.workbench.entity.FunnelVO;
 import com.biscuit.crm.workbench.entity.Tran;
 import com.biscuit.crm.workbench.mapper.CustomerMapper;
 import com.biscuit.crm.workbench.mapper.TranMapper;
@@ -63,5 +64,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Tran queryTransactionById(String id) {
         return tranMapper.selectTranById(id);
+    }
+
+    @Override
+    public List<FunnelVO> queryCountOfTranGroupByStage() {
+        return tranMapper.selectCountOfTranGroupByStage();
     }
 }
